@@ -1,0 +1,51 @@
+name: Daily AI digest
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+    - cron: '13 0 * * *'
+    - cron: '37 0 * * *'
+  workflow_dispatch:
+    inputs:
+      preview:
+        description: 'Preview only'
+        type: boolean
+        default: true
+      no_model:
+        description: 'Use Chinese templates'
+        type: boolean
+        default: false
+
+concurrency:
+  group: daily-ai-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+      - name: Collect and deliver
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
+          PREVIEW: ${{ inputs.preview }}
+          NO_MODEL: ${{ inputs.no_model }}
+          FINAL_SLOT: ${{ github.event.schedule == '37 0 * * *' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          args=()
+          [[ "$MANUAL" == true ]] && args+=(--manual)
+          [[ "$PREVIEW" == true ]] && args+=(--preview)
+          [[ "$NO_MODEL" == true ]] && args+=(--no-model)
+          [[ "$FINAL_SLOT" == true ]] && args+=(--final-slot)
+          python3 digest.py "${args[@]}"
