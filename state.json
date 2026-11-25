@@ -1,6 +1,43 @@
 {
   "days": {
-    "2026-11-25": "pending"
+    "2026-11-25": "sent"
   },
-  "items": []
+  "items": [
+    {
+      "url": "https://github.com/KKKKhazix/agent-autoloop",
+      "project": "kkkkhazix/agent-autoloop",
+      "title_key": "kkkkhazix agent autoloop",
+      "sent": "2026-11-25"
+    },
+    {
+      "url": "https://github.com/DIYgod/pinky",
+      "project": "diygod/pinky",
+      "title_key": "diygod pinky",
+      "sent": "2026-11-25"
+    },
+    {
+      "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/humanitys-first-exam",
+      "project": "",
+      "title_key": "we re launching humanity s first exam a kaggle hackathon to test llm reliability",
+      "sent": "2026-11-25"
+    },
+    {
+      "url": "https://github.com/codewhale-hq/Codewhale",
+      "project": "codewhale-hq/codewhale",
+      "title_key": "codewhale hq codewhale",
+      "sent": "2026-11-25"
+    },
+    {
+      "url": "https://github.com/getpaseo/paseo",
+      "project": "getpaseo/paseo",
+      "title_key": "getpaseo paseo",
+      "sent": "2026-11-25"
+    },
+    {
+      "url": "https://github.com/langgenius/dify",
+      "project": "langgenius/dify",
+      "title_key": "langgenius dify",
+      "sent": "2026-11-25"
+    }
+  ]
 }
