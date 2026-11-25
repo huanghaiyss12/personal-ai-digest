@@ -40,11 +40,11 @@ NEWS = re.compile(r'launch|model|gemini|gpt|deepseek|claude|introduc|releas|api|
 PRACTICAL = re.compile(r'gradle|kotlin|studio|\bsdk\b|\bndk\b|debug|build|tool|jetpack|termux|\badb\b|android \d|compatib|release', re.I)
 
 
-def fetch(url, *, data=None, headers=None, attempts=3):
+def fetch(url, *, data=None, headers=None, attempts=3, timeout=14):
     headers = {'User-Agent': 'personal-ai-digest/1.0', **(headers or {})}
     for attempt in range(attempts):
         try:
-            with urlopen(Request(url, data=data, headers=headers), timeout=14) as response:
+            with urlopen(Request(url, data=data, headers=headers), timeout=timeout) as response:
                 return response.read(4_000_000)
         except HTTPError as error:
             if error.code not in {429, 500, 502, 503, 504} or attempt == attempts - 1:
@@ -289,7 +289,7 @@ def summarize(items, enabled=True):
     for model in ('gemini-3.6-flash', 'gemini-3.5-flash'):
         try:
             raw = fetch(f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent',
-                        data=body, headers={'x-goog-api-key': key, 'Content-Type': 'application/json'}, attempts=1)
+                        data=body, headers={"x-goog-api-key": key, "Content-Type": "application/json"}, attempts=1, timeout=30)
             parts = json.loads(raw)['candidates'][0]['content']['parts']
             result = json.loads(''.join(p.get('text', '') for p in parts if not p.get('thought')))
             if not isinstance(result, list) or len(result) != len(items):
