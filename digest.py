@@ -12,7 +12,7 @@ import re
 import subprocess
 import time
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode, urlsplit, urlunsplit
+from urllib.parse import urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
@@ -123,7 +123,7 @@ def search(topic, section, now):
     for repo in result['items']:
         title = repo['full_name']
         description = plain(repo.get('description'))
-        if repo.get('disabled') or not description or repo.get('size', 0) < 20:
+        if repo.get('disabled') or not repo.get('license') or not description or repo.get('size', 0) < 20:
             continue
         stars = repo['stargazers_count']
         age = (now - stamp(repo['created_at'])).days
@@ -165,6 +165,26 @@ def anthropic(now):
     return output
 
 
+def deepseek_news(now):
+    host = 'https://api-docs.deepseek.com'
+    page = fetch(host + '/updates/').decode(errors='replace')
+    links = set(re.findall(r'href="(/news/news(\d{6})/?)"', page))
+    if not links:
+        raise ValueError('unrecognized DeepSeek changelog')
+    output = []
+    for path, code in sorted(links):
+        date = datetime.strptime(code, '%y%m%d').replace(tzinfo=BEIJING)
+        if not 0 <= (now - date).days <= 4:
+            continue
+        url = host + path
+        article = fetch(url, attempts=1).decode(errors='replace')
+        title = re.search(r'<title>(.*?)</title>', article, re.S)
+        if title:
+            output.append(dict(title=plain(title[1]), url=canonical(url), section=0,
+                               date=date.date().isoformat(), score=81, summary=''))
+    return output
+
+
 def deepseek(now):
     output = []
     for repo in github('orgs/deepseek-ai/repos', {'sort': 'created', 'per_page': 12}):
@@ -182,7 +202,7 @@ def deepseek(now):
 def collect(now):
     tasks = [(feed, url, section) for url, section in FEEDS]
     tasks += [(search, topic, section) for topic, section in SEARCHES]
-    tasks += [(anthropic,), (deepseek,)]
+    tasks += [(anthropic,), (deepseek,), (deepseek_news,)]
     candidates, failures = [], []
     with ThreadPoolExecutor(max_workers=4) as pool:
         jobs = [(task, pool.submit(task[0], *task[1:], now)) for task in tasks]
@@ -240,7 +260,19 @@ def template(item):
         ('近期仍有代码更新的开源项目。', '适合按原仓库文档评估安装成本和实际用途。'),
         ('Linux 或 Android 开发相关工具或更新。', '适合排查构建、调试或 Termux／arm64 环境兼容性。'),
     ]
-    return reasons[item['section']]
+    summary, reason = reasons[item['section']]
+    evidence = item['title'] + ' ' + item.get('summary', '')
+    for pattern, description, benefit in [
+        (r'termux', '资料涉及 Termux 工具或使用环境。', '可以核对手机端安装方式和 arm64 支持。'),
+        (r'android|kotlin|gradle', '资料涉及 Android 开发或设备端工作流。', '可以核对构建、调试或设备操作是否适用。'),
+        (r'\bmcp\b', '资料涉及 MCP 服务或客户端集成。', '可以检查能否给现有 Agent 增加工具或数据源。'),
+        (r'claude.code|codex|hermes', '资料涉及现有编码 Agent 的工具链。', '可以核对是否能复用到现有配置和任务。'),
+        (r'inference|quantiz|local.llm', '资料涉及本地推理或模型部署。', '可以评估模型体积、运行时和硬件门槛。'),
+        (r'benchmark|eval', '资料涉及模型评测或基准。', '可以了解评估覆盖面和选型依据。'),
+    ]:
+        if re.search(pattern, evidence, re.I):
+            return description, benefit
+    return summary, reason
 
 
 def summarize(items, enabled=True):
