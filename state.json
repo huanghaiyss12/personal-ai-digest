@@ -1,7 +1,7 @@
 {
   "days": {
     "2026-11-25": "sent",
-    "2026-11-26": "pending"
+    "2026-11-26": "sent"
   },
   "items": [
     {
@@ -39,6 +39,42 @@
       "project": "langgenius/dify",
       "title_key": "langgenius dify",
       "sent": "2026-11-25"
+    },
+    {
+      "url": "https://github.com/mdiri-ai/SoduWork",
+      "project": "mdiri-ai/soduwork",
+      "title_key": "mdiri ai soduwork",
+      "sent": "2026-11-26"
+    },
+    {
+      "url": "https://github.com/qianyiai/kurocat",
+      "project": "qianyiai/kurocat",
+      "title_key": "qianyiai kurocat",
+      "sent": "2026-11-26"
+    },
+    {
+      "url": "https://github.com/cutetailbud/ff-ruyijs",
+      "project": "cutetailbud/ff-ruyijs",
+      "title_key": "cutetailbud ff ruyijs",
+      "sent": "2026-11-26"
+    },
+    {
+      "url": "https://github.com/heygen-com/hyperframes",
+      "project": "heygen-com/hyperframes",
+      "title_key": "heygen com hyperframes",
+      "sent": "2026-11-26"
+    },
+    {
+      "url": "https://github.com/manaflow-ai/cmux",
+      "project": "manaflow-ai/cmux",
+      "title_key": "manaflow ai cmux",
+      "sent": "2026-11-26"
+    },
+    {
+      "url": "https://github.com/morluto/rea",
+      "project": "morluto/rea",
+      "title_key": "morluto rea",
+      "sent": "2026-11-26"
     }
   ]
 }
