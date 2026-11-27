@@ -2,7 +2,7 @@
   "days": {
     "2026-11-25": "sent",
     "2026-11-26": "sent",
-    "2026-11-27": "pending"
+    "2026-11-27": "sent"
   },
   "items": [
     {
@@ -76,6 +76,42 @@
       "project": "morluto/rea",
       "title_key": "morluto rea",
       "sent": "2026-11-26"
+    },
+    {
+      "url": "https://github.com/erkamyaman/rust-anything",
+      "project": "erkamyaman/rust-anything",
+      "title_key": "erkamyaman rust anything",
+      "sent": "2026-11-27"
+    },
+    {
+      "url": "https://github.com/JosssphZhou/poki",
+      "project": "josssphzhou/poki",
+      "title_key": "josssphzhou poki",
+      "sent": "2026-11-27"
+    },
+    {
+      "url": "https://github.com/devswha/ovis",
+      "project": "devswha/ovis",
+      "title_key": "devswha ovis",
+      "sent": "2026-11-27"
+    },
+    {
+      "url": "https://github.com/HKUDS/nanobot",
+      "project": "hkuds/nanobot",
+      "title_key": "hkuds nanobot",
+      "sent": "2026-11-27"
+    },
+    {
+      "url": "https://github.com/termux/termux-packages",
+      "project": "termux/termux-packages",
+      "title_key": "termux termux packages",
+      "sent": "2026-11-27"
+    },
+    {
+      "url": "https://github.com/Eslamasabry/opencode-mobile-next",
+      "project": "eslamasabry/opencode-mobile-next",
+      "title_key": "eslamasabry opencode mobile next",
+      "sent": "2026-11-27"
     }
   ]
 }
